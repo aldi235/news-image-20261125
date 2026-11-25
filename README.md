@@ -1,53 +1,41 @@
-# The World in One Page — Wednesday 25 November 2026
+# The World in One Page — 25 November 2026
 
-One image summing up world news for **Wednesday 25 November 2026**, for the
-make.fun bounty `news-image-20261125`.
+A single 1024×1024 newspaper front page that sums up Wednesday
+25 November 2026's world news in one image, for the
+`news-image-20261125` bounty ($100).
 
-## The image
+## What's on the page
 
-`entry.png` (1024×1024) is a dense newspaper front page:
+- **Masthead** — "THE WORLD IN ONE PAGE", dated Wednesday 25 November 2026.
+- **Three lead stories** — the Nvidia rally fizzling after Monday's
+  +31.5% surge, the Houthis hitting Riyadh's PIF Tower a second time,
+  and COP31 ending without a deal.
+- **Timeline strip** — the day as it unfolded, from the Gaza strike at
+  11:40 UTC to the 700,000 Russian war dead figure at 01:00 UTC.
+- **Schematic world map** — the hot spots marked: Las Vegas, Kyiv, Gaza,
+  Benghazi, Riyadh, Aden and Banten.
+- **Markets chart** — Monday's rally (Nasdaq +6.5%, Nvidia +31.5%)
+  against Tuesday's fade (Nvidia −5.8%), plus Asia's Tuesday surge.
+- **Seven region sections, 35 stories** — Americas (7), Europe (6),
+  Middle East (6), Africa (3), Asia-Pacific (4), South Asia (3) and
+  Tech / Science / Sport (6). Every story is one short headline plus a
+  one-line summary, ending with its source in red.
+- **By the numbers** — $952bn, +31.5%, 11 wounded, 60 km, 700,000 and
+  5,775: the day's six figures that matter most.
 
-- **Masthead** with the date, plus three lead stories: Nvidia's rally
-  fizzling (~6% slide to $155.38), the Houthi strike on Riyadh's PIF Tower
-  (11 wounded), and COP31 ending without a deal — the first failed climate
-  summit since Copenhagen 2009.
-- **Timeline strip** — the day as it unfolded in UTC, from the Hamas
-  security chief's killing in Gaza (11:40) to the 700,000 Russian war-dead
-  analysis (01:00).
-- **Schematic world map** marking the day's hot spots (Las Vegas, Kyiv,
-  Gaza, Benghazi, Riyadh, Aden, Banten).
-- **Markets chart** — Monday's rally fading on Tuesday: Nvidia +31.5% then
-  −5.8%, Taiex +9%, Kospi +6.3%, Nasdaq +6.5% then −1.5%.
-- **Seven region sections** — Americas, Europe, Africa, Middle East,
-  Asia-Pacific, South Asia, Tech / Science / Sport — with 35 short stories,
-  each carrying its source (Reuters, RFE/RL, CNN, NY Post, WHO, Haaretz, …).
-- **By the numbers** — the day's key figures at a glance ($952bn, 31.5%,
-  11 wounded, 60 km, 700,000 killed, 5,775 Ebola deaths).
-
-Every story was verified against reporting first published or updated on
-24–25 November 2026. Nothing is fabricated.
+38 stories in total (3 leads + 35 region stories), all drawn from real
+reporting dated 24–25 November 2026.
 
 ## How it is built
 
-`draw_news.py` renders the image with PIL (DejaVu fonts, no network):
-
-```sh
-python3 draw_news.py   # writes entry.png
-```
-
-`main.ts` is the sandbox entrypoint: it only copies the committed
-`entry.png` into the output directory (`MAKEFUN_OUTPUT_DIR`, default
-`/output`), verifying the PNG signature, byte size and the 1 MiB gate
-limit. Node 22, stdlib only, no network access needed.
-
-## Test
+`draw_news.py` renders the whole page with Pillow and the system DejaVu
+fonts — no network, no downloaded assets. `main.ts` (Node standard
+library only) copies the finished `entry.png` into the output directory
+and checks the copy is byte-identical, a valid PNG, and under 1 MiB.
 
 ```sh
 python3 draw_news.py
-mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts
-cmp entry.png out/entry.png   # byte-identical
+mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts && cmp entry.png out/entry.png
 ```
 
-## License
-
-MIT — see `LICENSE`.
+The image is 1024×1024 and the PNG is well under the 1 MiB limit.

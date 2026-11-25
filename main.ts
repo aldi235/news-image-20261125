@@ -1,40 +1,52 @@
-/**
- * news-image-20261125 — entrypoint for make.fun.
- *
- * The image is fully pre-rendered by draw_news.py (PIL) and committed as
- * entry.png. This entrypoint only copies that file into the output
- * directory, so it works in the grader sandbox with no network access.
- * Stdlib only: fs + path + url.
- */
+// Entry point for the news-image-20261125 bundle.
+//
+// Copies the committed entry.png into the directory given by
+// MAKEFUN_OUTPUT_DIR (default /output) and verifies the copy before
+// reporting success. Node standard library only — no dependencies.
+//
+//   node main.ts
+//   MAKEFUN_OUTPUT_DIR=out node main.ts
 import { copyFileSync, existsSync, mkdirSync, readFileSync, statSync } from "node:fs";
-import { dirname, join, resolve } from "node:path";
+import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const here = dirname(fileURLToPath(import.meta.url));
-const source = resolve(here, "entry.png");
-const outDir = process.env.MAKEFUN_OUTPUT_DIR || "/output";
-const target = join(outDir, "entry.png");
+const PNG_MAGIC = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
+const MAX_BYTES = 1024 * 1024;
+
+const here = resolve(fileURLToPath(new URL(".", import.meta.url)));
+const source = join(here, "entry.png");
+const outDir = process.env.MAKEFUN_OUTPUT_DIR ?? "/output";
+const target = join(resolve(outDir), "entry.png");
 
 if (!existsSync(source)) {
-  throw new Error("entry.png missing next to main.ts");
+  throw new Error(`source image missing: ${source} — run python3 draw_news.py first`);
 }
-mkdirSync(outDir, { recursive: true });
+const sourceBytes = readFileSync(source);
+if (!sourceBytes.subarray(0, 8).equals(PNG_MAGIC)) {
+  throw new Error("source entry.png does not start with the PNG signature");
+}
+
+mkdirSync(resolve(outDir), { recursive: true });
 copyFileSync(source, target);
 
-// Verify the copy landed intact: same byte size as the committed image,
-// and a valid PNG signature (89 50 4E 47 0D 0A 1A 0A) at the start — the
-// gate refuses anything that is not a whole PNG under 1 MiB.
-const srcBytes = statSync(source).size;
-const outBytes = statSync(target).size;
-if (srcBytes !== outBytes) {
-  throw new Error(`copy mismatch: source ${srcBytes} bytes, output ${outBytes} bytes`);
+const before = sourceBytes;
+const after = readFileSync(target);
+const size = statSync(target).size;
+
+if (size !== before.length || size !== after.length) {
+  throw new Error(`size mismatch: source ${before.length} bytes, copy ${size} bytes`);
 }
-const header = readFileSync(target).subarray(0, 8);
-const pngSig = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
-if (!header.equals(pngSig)) {
-  throw new Error("output is not a valid PNG (bad signature)");
+if (!after.subarray(0, 8).equals(PNG_MAGIC)) {
+  throw new Error("copied file does not start with the PNG signature");
 }
-if (outBytes > 1048576) {
-  throw new Error(`output exceeds the 1 MiB gate limit: ${outBytes} bytes`);
+if (size >= MAX_BYTES) {
+  throw new Error(`entry.png is ${size} bytes, over the 1 MiB limit`);
 }
-console.log(`copied entry.png -> ${target} (${outBytes} bytes, verified PNG)`);
+if (!before.equals(after)) {
+  throw new Error("copied bytes differ from the source image");
+}
+
+console.log(
+  `OK: entry.png (${size} bytes, ${(size / 1024).toFixed(1)} KiB) copied to ` +
+    `${target} and verified (PNG signature, byte-identical, under 1 MiB)`,
+);
