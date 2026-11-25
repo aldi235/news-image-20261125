@@ -2,6 +2,10 @@
 """Render 'The World in One Page' — a dense 1024x1024 newspaper front page
 summarising the world news of Wednesday 25 November 2026.
 
+Evening refresh (21:00 WIB): the full day's news — Nvidia's slide continues,
+Houthi claims widen, Hormuz tankers burn, Shenzhou-24 flies, Solomons signs
+its Australia pact, and the US proposes new tariffs on 14 partners.
+
 Run:  python3 draw_news.py        -> writes entry.png next to this script.
 Only the Python standard library plus Pillow is used; fonts are the system
 DejaVu faces. Everything on the page is drawn from the story tables below.
@@ -120,28 +124,30 @@ class Column:
 # ---------------------------------------------------------------- content
 LEADS = [
     ("LEAD 1 — MARKETS",
-     "Nvidia rally fizzles as Huang comeback fades",
-     "Shares slide ~6% to $155.38 on Tue 25 Nov, a day after a +31.5% surge "
-     "added $952bn. WSJ: Huang disclosed more affairs to the board; he "
-     "testifies to Congress in early Dec. — NY POST / WSJ"),
+     "Nvidia keeps sliding as Huang comeback fades",
+     "Pre-market -6% to ~$146 on Wed after Tue's -5.9% close at $155.38. "
+     "Huang tells staff he broke the code of conduct and is in therapy; "
+     "lawmakers probe Trump's role in his return; FBI, DOJ and SEC probes "
+     "run on. — REUTERS / CNBC"),
     ("LEAD 2 — YEMEN / SAUDI ARABIA",
-     "Houthis hit Riyadh's tallest tower — again",
-     "The PIF Tower is struck for the 2nd time in under a week; 11 wounded, "
-     "incl. 2 Saudis, 2 Indians, 3 Nepalis and 4 Egyptians. Houthis now "
-     "~60 km from Aden; the coalition vows a decisive response. — REUTERS"),
+     "Houthis claim refinery hit, threaten Jeddah port",
+     "After the PIF Tower strike, Houthis claim a hit on the Ras Tanura "
+     "refinery and warn Saudi Red Sea ports are targets if Hodeidah is "
+     "hit. The coalition says it downed a cruise missile and two drones. "
+     "— REUTERS"),
     ("LEAD 3 — CLIMATE",
      "COP31 ends with no deal — first failure since 2009",
-     "~40 countries rejected a text with no fossil-fuel phase-out. 90 nations "
-     "sign a voluntary electrification pledge instead; COP32 goes to Addis "
-     "Ababa. — REUTERS"),
+     "Pope Leo calls the collapse 'troubling' and urges action; UN climate "
+     "chief Stiell says a just-transition package and electrification "
+     "pledges survived. COP32 goes to Addis Ababa. — REUTERS"),
 ]
 
 TIMELINE = [
-    ("24 NOV 11:40", "Israel kills Hamas security chief in Gaza City"),
-    ("14:27", "PIF Tower hit in Riyadh — 11 wounded"),
-    ("16:51", "Yemen military: Houthis 60 km from Aden"),
-    ("EVENING", "Huawei guilty verdict in New York"),
-    ("25 NOV 01:00", "700,000 Russian soldiers killed in Ukraine war"),
+    ("25 NOV 00:18", "Shenzhou-24 lifts off with Pakistan's first astronaut"),
+    ("06:30", "Solomon Islands signs Australia pact, bars foreign bases"),
+    ("MORNING", "Two tankers hit mines and burn in the Strait of Hormuz"),
+    ("MIDDAY", "Pope Leo calls the COP31 failure 'troubling'"),
+    ("13:30", "US proposes new tariffs on 14 trading partners"),
 ]
 
 # (panel title, colour, [(headline, body, source tag), ...])
@@ -151,40 +157,40 @@ REGIONS_LEFT = [
          "Annual White House ceremony ahead of Thanksgiving.", "REUTERS"),
         ("Giuliani awarded the Medal of Freedom",
          "Trump honours the former New York mayor at the White House.", "REUTERS"),
-        ("Fort Hood shooter seeks stay of execution",
-         "Nidal Hasan asks a court to halt next week's execution.", "REUTERS"),
+        ("US proposes new tariffs on 14 partners",
+         "China faces the steepest rates, +20% on top of ~25%; allies capped at 15%.", "REUTERS"),
+        ("Colombia frees all hostages in supermarket siege",
+         "Security forces end the Cartagena standoff; one assailant killed.", "PRESS"),
+        ("Abrego Garcia leaves US for Spain",
+         "Salvadoran man at the centre of the deportation fight departs after 20 months.", "PRESS"),
         ("Cyberattack hits CIA and ODNI",
          "Attack affects classified information, CNN reports on 25 Nov.", "CNN"),
-        ("Huawei guilty on 10 of 12 counts",
-         "Trade-secret theft and bank fraud after a 3-month New York trial.", "US DOJ"),
         ("Radar outage delays flights at O'Hare",
          "FAA says arrivals may halt as delays mount in Chicago.", "REUTERS"),
-        ("Wall Street fades on Tuesday",
-         "Nasdaq -1.5%, S&P 500 -0.5%, Dow +423 (+0.9%).", "NY POST"),
     ]),
     ("EUROPE", (108, 52, 131), [
         ("Zelensky confirms Gulf of Finland ship strike",
          "Ukraine hit a Russian cargo ship; ally Norway urges caution.", "REUTERS"),
-        ("Sarkozy corruption case ordered to trial",
-         "Ex-president and wife Carla Bruni face a hearing on 1 Apr 2027.", "REUTERS"),
         ("NATO to deploy early-warning jets in Poland",
          "Move follows missiles landing on Polish territory.", "REUTERS"),
-        ("700,000+ Russian soldiers killed in Ukraine",
-         "New analysis puts the toll past 700,000 since the invasion.", "RFE/RL"),
-        ("Russian strike kills 11 near Kyiv",
-         "Apartment block hit; rescuers race to find survivors.", "RFE/RL"),
-        ("Swedish MPs to vote on Kristersson as PM",
-         "Parliament decides whether the Moderates leader stays on.", "REUTERS"),
+        ("Leaked data puts Russian war dead near 490,000",
+         "Leaked Russian statistics analysed by the BBC give the fullest toll yet.", "BBC"),
+        ("Russian strike kills 2 in Odesa",
+         "Two killed, three hurt incl. a child; a Kyiv apartment block catches fire.", "UKRAINE OFFICIALS"),
+        ("Kristersson PM vote set for 30 Nov",
+         "Speaker nominates him to lead a four-party centre-right government.", "REUTERS"),
+        ("Pope Leo calls COP31 failure \u2018troubling\u2019",
+         "Pontiff urges leaders to step up climate action at his weekly audience.", "REUTERS"),
     ]),
     ("MIDDLE EAST", (185, 119, 14), [
         ("Israel kills Hamas security chief in Gaza",
-         "Naeem Abu Mohammed Nahel dies in Gaza City; six others killed.", "REUTERS"),
+         "Mohammad Abuelouf dies with his wife and two children, Gaza officials say.", "GAZA OFFICIALS"),
         ("Meningitis epidemic alert in Gaza",
          "272 cases in October — eight times the normal monthly rate.", "GAZA HEALTH MINISTRY"),
         ("Iran braces for winter gas shortages",
          "War damage deepens the energy crisis; rationing began 22 Nov.", "RFE/RL"),
-        ("Three tankers hit mines in Hormuz, Iran says",
-         "IRGC Navy reports the strikes in the Strait of Hormuz.", "IRGC NAVY"),
+        ("Two more tankers hit mines in Hormuz",
+         "IRGC Navy says two tankers struck mines and caught fire on Wed; three hit earlier in the week.", "IRGC NAVY"),
         ("Saudi strikes in Yemen's Lahj kill 25",
          "Buses and trucks hit; 25 dead or missing, Saba reports.", "SABA"),
         ("Israeli military suicides hit 16-year high",
@@ -196,18 +202,24 @@ REGIONS_RIGHT = [
     ("AFRICA", (30, 132, 73), [
         ("WHO evacuates staff in DRC's Ituri",
          "Workers sheltered 3 days from fighting in Akwe; Ebola toll 5,775 of 11,762.", "WHO"),
-        ("Benghazi sinking risks Libya instability",
-         "Ukraine's sinking of a Russian vessel stirs the frozen conflict.", "REUTERS"),
+        ("Two Libyan officers die in Benghazi strike",
+         "Ukrainian drone attack on Russian ships kills two; Kyiv says it sank a warship.", "REUTERS"),
+        ("RSF drone strikes kill 19 in Sudan",
+         "Drones hit three residential areas in Damazin, Blue Nile; 20 wounded.", "REUTERS"),
         ("COP32 goes to Ethiopia",
          "Addis Ababa hosts the next climate summit in Nov 2027.", "REUTERS"),
     ]),
     ("ASIA-PACIFIC", (202, 111, 30), [
-        ("GTA 6 out worldwide on 19 Nov",
-         "Rockstar's blockbuster launches for PS5 and Xbox Series X|S.", "PRESS"),
-        ("Asian stocks surge on Huang's return",
-         "Taiwan Taiex +9%, Kospi +6.3%, Nikkei +3.9% on Tuesday.", "CNN"),
+        ("Pakistan's first astronaut reaches Tiangong",
+         "Shenzhou-24 docks after a 3.5-hour flight; Zeeshan Ali is the first foreigner aboard China's station.", "REUTERS"),
+        ("Solomons signs Australia pact, bars foreign bases",
+         "Canberra becomes defence partner of choice; Honiara says no foreign base, ever.", "REUTERS"),
+        ("Asian tech tumbles on AI doubts",
+         "Nikkei -2.8%, Kospi -6% at one point, SoftBank -15% as AI-boom doubts spread.", "PRESS"),
         ("Anthropic sinks below its $83 IPO price",
-         "Shares fall under the listing price for the first time since Thursday.", "NY POST"),
+         "Shares fall under the listing price for the first time, wiping out its $1tn valuation.", "NY POST"),
+        ("UK sanctions 5 Myanmar generals",
+         "London acts after the ICJ ruled Myanmar committed genocide against the Rohingya.", "PRESS"),
         ("Nepal PM makes first state visit to India",
          "Balendra Shah holds talks with Modi in New Delhi, 22\u201323 Nov.", "PRESS"),
     ]),
@@ -216,16 +228,14 @@ REGIONS_RIGHT = [
          "Alliance announced after a six-year split.", "PRESS"),
         ("RFE/RL returns to shortwave for Afghan girls",
          "Educational radio for girls barred from school.", "RFE/RL"),
-        ("Denmark upholds \u201cghetto\u201d evictions",
-         "Supreme Court backs the controversial housing policy.", "PRESS"),
     ]),
     ("TECH / SCIENCE / SPORT", (46, 64, 83), [
-        ("Nvidia -5.8% as rally cools",
-         "One-month implied volatility hits 68% after Monday's surge.", "NY POST / REUTERS"),
-        ("Dell reports Q3 after the bell",
+        ("Nvidia slides again before the open",
+         "Pre-market -6% to ~$146 after Tue's -5.9%; lawmakers probe Trump's role in Huang's return.", "REUTERS"),
+        ("Huawei guilty on 10 of 12 counts",
+         "Trade-secret theft and bank fraud after a 3-month New York trial; acquitted of racketeering.", "US DOJ"),
+        ("Dell reports Q3 after today's close",
          "AI-server margins in focus for investors today.", "STOCKTWITS"),
-        ("Eclipse caught as asteroid shadows asteroid",
-         "Spacecraft watches Didymos shadow Dimorphos.", "PRESS"),
         ("Coral species \u201cresurrected\u201d on Great Barrier Reef",
          "Genetic analysis revives 12 Acropora species.", "PRESS"),
         ("Verstappen wins chaotic Las Vegas GP",
@@ -240,7 +250,7 @@ NUMBERS = [
     ("+31.5%", "Nvidia's Monday jump"),
     ("11", "wounded in the Riyadh tower strike"),
     ("60 km", "Houthis from Aden"),
-    ("700,000", "Russian soldiers killed"),
+    ("490,334", "Russian war dead in leaked data"),
     ("5,775", "Ebola deaths in DRC"),
 ]
 
@@ -250,7 +260,7 @@ BARS = [
     ("Nasdaq Mon", 6.5, GREEN),
     ("S&P 500 Mon", 4.7, GREEN),
     ("Dow Mon", 3.0, GREEN),
-    ("NVDA Tue", -5.8, RED),
+    ("NVDA Wed", -6.0, RED),
 ]
 
 # schematic map: (label, dot x, dot y, label dx, label dy) in panel coords
@@ -261,6 +271,7 @@ MAP_DOTS = [
     ("Benghazi", 276, 62, -62, 8),
     ("Riyadh", 332, 58, 8, -4),
     ("Aden", 338, 76, 8, -4),
+    ("Jiuquan", 400, 28, 8, -4),
     ("Banten", 468, 82, -48, 10),
 ]
 
@@ -327,7 +338,7 @@ def draw_markets(s):
     px, py, pw, ph = 564, 248, 452, 120
     d = s.d
     d.rectangle([px, py, px + pw, py + ph], fill=CARD, outline=EDGE)
-    s.text((px + 10, py + 5), "MARKETS \u2014 MONDAY RALLY, TUESDAY FADE",
+    s.text((px + 10, py + 5), "MARKETS \u2014 RALLY FADES, ASIA TUMBLES",
            10, bold=True, fill=NAVY)
     axis = px + 112
     top = py + 26
@@ -343,9 +354,9 @@ def draw_markets(s):
         else:
             d.rectangle([axis - bar, yy + 1, axis, yy + 11], fill=col)
             d.text((axis + 6, yy), f"{val}%", font=fnt(9, True), fill=col)
-    s.para(px + 10, top + 5 * 15 + 2, pw - 20,
-           "Asia Tue: Taiex +9% \u00b7 Kospi +6.3% \u00b7 Nikkei +3.9%. "
-           "$12tn wiped from global stocks since 6 Oct. \u2014 AJ BELL / LSEG",
+    s.para(px + 10, top + 5 * 15, pw - 20,
+           "Tue: Nasdaq -1.5% \u00b7 S&P -0.5% \u00b7 Dow +0.9%. Wed Asia: "
+           "Nikkei -2.8% \u00b7 Kospi -6% \u00b7 SoftBank -15%. \u2014 REUTERS",
            8, fill=GREY, leading=10)
 
 
